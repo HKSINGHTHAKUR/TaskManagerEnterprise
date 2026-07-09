@@ -2,6 +2,8 @@
 
 A professional, high-performance task management application designed for corporate managers to assign, track, and toggle task completion status for employees.
 
+**Live Demo**: [https://task-manager-enterprise-alpha.vercel.app/](https://task-manager-enterprise-alpha.vercel.app/)
+
 ---
 
 ## Key Features
