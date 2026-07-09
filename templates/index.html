@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>TaskManager Enterprise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="loginView" class="view active">
+        <div class="login-container">
+            <div class="login-brand">
+                <div class="brand-emblem">
+                    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="4" width="72" height="72" rx="12" stroke="#c8a96e" stroke-width="2" fill="none"/>
+                        <path d="M40 16 L48 30 L40 26 L32 30 L40 16Z" fill="#c8a96e"/>
+                        <path d="M24 38 L56 38" stroke="#c8a96e" stroke-width="1.5"/>
+                        <path d="M28 44 L52 44" stroke="#c8a96e" stroke-width="1.5"/>
+                        <path d="M32 50 L48 50" stroke="#c8a96e" stroke-width="1.5"/>
+                        <circle cx="40" cy="56" r="6" stroke="#c8a96e" stroke-width="1.5" fill="none"/>
+                        <path d="M37 56 L40 59 L43 53" stroke="#c8a96e" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <h1 class="brand-title">TaskManager</h1>
+                <p class="brand-subtitle">Enterprise Suite</p>
+                <div class="brand-line"></div>
+            </div>
+            <form id="loginForm" class="login-form" autocomplete="off">
+                <div class="input-group">
+                    <label for="username">Manager Credential</label>
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Passkey</label>
+                    <input type="password" id="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+                </div>
+                <button type="submit" id="loginBtn" class="btn-primary">
+                    <span class="btn-text">Authenticate</span>
+                    <span class="btn-loader"></span>
+                </button>
+                <p id="loginError" class="error-message"></p>
+            </form>
+            <div class="login-footer">
+                <p>Authorized personnel only</p>
+                <p>&copy; 2026 TaskManager Enterprise</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboardView" class="view">
+        <header class="dash-header">
+            <div class="header-left">
+                <div class="header-emblem">
+                    <svg viewBox="0 0 32 32" width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="28" height="28" rx="6" stroke="#c8a96e" stroke-width="1.5" fill="none"/>
+                        <path d="M16 8 L20 14 L16 12 L12 14 L16 8Z" fill="#c8a96e"/>
+                        <path d="M10 16 L22 16" stroke="#c8a96e" stroke-width="1"/>
+                        <path d="M12 19 L20 19" stroke="#c8a96e" stroke-width="1"/>
+                        <circle cx="16" cy="22" r="2.5" stroke="#c8a96e" stroke-width="1" fill="none"/>
+                    </svg>
+                </div>
+                <div class="header-branding">
+                    <h2>TaskManager</h2>
+                    <span class="header-role">Enterprise</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <span id="greeting" class="header-greeting"></span>
+            </div>
+            <div class="header-right">
+                <span id="userBadge" class="user-badge"></span>
+                <button id="logoutBtn" class="btn-logout">Sign Out</button>
+            </div>
+        </header>
+
+        <main class="dash-main">
+            <aside class="dash-sidebar">
+                <div class="stats-panel">
+                    <div class="stat-item">
+                        <span class="stat-value" id="statTotal">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value gold" id="statCompleted">0</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statPending">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                </div>
+                <div class="sidebar-divider"></div>
+                <div class="filter-panel">
+                    <label for="taskFilter" class="filter-label">Filter</label>
+                    <div class="select-wrap">
+                        <select id="taskFilter">
+                            <option value="all">All Tasks</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="dash-content">
+                <div class="task-form-container">
+                    <h3 class="form-section-title">Assign / Update Task</h3>
+                    <form id="taskForm" class="task-form" autocomplete="off">
+                        <input type="hidden" id="editTaskId" value="">
+                        
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="employeeId">Employee ID</label>
+                                <input type="text" id="employeeId" placeholder="e.g. E101" required>
+                            </div>
+                            
+                            <div class="form-field">
+                                <label for="employeeName">Employee Name</label>
+                                <input type="text" id="employeeName" placeholder="e.g. Ravi Kumar" required>
+                            </div>
+                            
+                            <div class="form-field">
+                                <label for="taskInput">Task Title</label>
+                                <div class="select-wrap">
+                                    <select id="taskInput" required>
+                                        <option value="" disabled selected>Select task</option>
+                                        <option value="Group Discussion">Group Discussion</option>
+                                        <option value="Meeting">Meeting</option>
+                                        <option value="Project Delivery">Project Delivery</option>
+                                        <option value="Documentation">Documentation</option>
+                                        <option value="Code Review">Code Review</option>
+                                        <option value="Client Call">Client Call</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-field">
+                                <label for="taskStatus">Completed</label>
+                                <div class="select-wrap">
+                                    <select id="taskStatus" required>
+                                        <option value="" disabled selected>Select status</option>
+                                        <option value="false">Not Completed</option>
+                                        <option value="true">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-field btn-field">
+                                <button type="submit" id="taskSubmitBtn" class="btn-submit">
+                                    <span id="taskBtnLabel">Submit</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="formFeedback" class="form-feedback"></div>
+                    </form>
+                </div>
+                <div class="tasks-container" id="tasksContainer">
+                    <h3 class="table-section-title">All Tasks</h3>
+                    <div class="tasks-header">
+                        <span>TASK ID</span>
+                        <span>EMP ID</span>
+                        <span>EMPLOYEE NAME</span>
+                        <span>TASK TITLE</span>
+                        <span>STATUS</span>
+                        <span>TOGGLE</span>
+                        <span>ACTION</span>
+                    </div>
+                    <div class="tasks-list" id="tasksList"></div>
+                    <div class="tasks-empty" id="tasksEmpty">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="5" y="8" width="30" height="24" rx="3" stroke="#c8a96e" stroke-width="1.5" fill="none" opacity="0.4"/>
+                            <path d="M12 17 L28 17" stroke="#c8a96e" stroke-width="1" opacity="0.4"/>
+                            <path d="M12 22 L28 22" stroke="#c8a96e" stroke-width="1" opacity="0.4"/>
+                            <path d="M12 27 L22 27" stroke="#c8a96e" stroke-width="1" opacity="0.4"/>
+                        </svg>
+                        <p>No tasks yet. Assign your first task above.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="dash-footer">
+            <span>TaskManager Enterprise Suite v2.0</span>
+            <span>Secure Session Active</span>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
